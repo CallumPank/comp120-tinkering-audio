@@ -1,7 +1,10 @@
+import random
 import wave, struct, math
 
 
 samprate = 44100
+lengthwhite = 44100 * 0.5  #This is the amount of seconds
+amplitude = 32767
 
 values = []
 frames = []
@@ -52,4 +55,18 @@ def echo(sound_file, delay):
     noise_b.close()
     return values
 
+def whitenoise():
+    #Creates a blank sound
+    makenoise = wave.open('whitenoise.wav', 'w')
+    makenoise.setparams((1, 2, 44100, lengthwhite, 'NONE', 'Not compressed'))
+
+    for pos in range(int(length)):
+        rawSample = random.uniform(-1, 1)
+        sampleVal = int(amplitude * rawSample)
+        packedval = struct.pack('h', sampleVal)
+        makenoise.writeframes(packedval)
+    return makenoise
+
+
 echo(frames, 44100)
+whitenoise()
